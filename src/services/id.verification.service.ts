@@ -1,12 +1,13 @@
-import { connectionDB } from "../database/db.js";
-import { Request, Response } from "express";
+import prisma from "../database/db.js";
 
-export async function verificaId(idNumber: number){
+export async function verificaMovieId(idNumber: number){
 
-    const verifica =  await connectionDB.query('SELECT * FROM reviews WHERE id=$1;', [idNumber])
-    if(verifica.rows.length === 0){
-        return {erro: "review não encontrado"};
-    }
-    return "Ok"
-
+    const verifica = await prisma.movies.findUnique({
+        where: {
+            id: idNumber
+        }
+    })
+    
+    return verifica
 }
+

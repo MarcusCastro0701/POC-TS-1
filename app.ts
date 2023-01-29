@@ -3,6 +3,7 @@ import cors from "cors"
 
 //Routes
 import reviewRouter from './src/routes/reviews.routes.js'
+import movieRouter from './src/routes/movies.routes.js'
 //
 
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(reviewRouter);
+app.use(movieRouter)
 //
 
 

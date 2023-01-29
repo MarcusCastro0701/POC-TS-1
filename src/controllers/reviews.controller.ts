@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { insertReview, retrieveReviews, updateReview, deleteReview } from "../repositories/reviews.repository.js";
-import { Review, Comentary } from "../protocols/review.protocol.js";
+import { insertReview, retrieveReviews, updateReview, deleteReview, updateMovie, retrieveMovies, retrieveGenres, retrieveParentalRatings } from "../repositories/reviews.repository.js";
+import { Review, Comentary, NewReview } from "../protocols/review.protocol.js";
 import { reviewSchema } from "../schemas/review.schemas.js";
-import { connectionDB } from "../database/db.js";
-import { verificaId } from "../services/id.verification.service.js";
+import { verificaMovieId } from "../services/id.verification.service.js";
 
 
 export async function postReview(req: Request, res: Response){
 
     const body = req.body as Review;
+    const movie_id = req.body.movie_id as number;
 
     const { error } = reviewSchema.validate(body);
     if (error) {
@@ -18,11 +18,26 @@ export async function postReview(req: Request, res: Response){
     }
 
     try {
-        await insertReview(body);
-        res.sendStatus(200);
+        const retorno = await insertReview(body, movie_id);
+        const type = typeof retorno
+        
+        if (type !== 'object' || retorno === null){
+            console.log("filme não encontrado no banco ou já existe um review com este filme")
+            res.sendStatus(400)
+            return
+        }
+
+        const update = await updateMovie(movie_id);
+        if (update === undefined || update === null){
+            console.log("Houve um erro ao fazer o update")
+            res.sendStatus(400)
+            return
+        }
+
+        res.status(200).send(retorno);
         return;
     } catch (error) {
-        console.log(error, "erro no try/catch de post review");
+        console.log(error, "erro no try/catch de postReview");
         res.sendStatus(500);
         return
     }
@@ -33,7 +48,13 @@ export async function getReviews(req: Request, res: Response){
 
     try {
         const get = await retrieveReviews();
-        res.status(200).send(get.rows);
+        if(get === null || get === undefined){
+            console.log("Houve um erro ao buscar as reviews no banco");
+            res.sendStatus(400)
+            return
+        }
+        res.status(200).send(get);
+        return
     } catch (error) {
         console.log(error, "erro no try/catch de get/reviews")
         res.sendStatus(500);
@@ -42,26 +63,43 @@ export async function getReviews(req: Request, res: Response){
 
 }
 
+export async function getMovies(req: Request, res: Response){
+
+    try {
+        const retorno = await retrieveMovies()
+        if(retorno === null || retorno === undefined){
+            console.log("Houve um erro ao buscar os movies no banco")
+            res.sendStatus(400);
+            return
+        }
+        console.log(retorno)
+        res.status(200).send(retorno)
+    } catch (error) {
+        console.log(error, "houve um erro no try/catch de getMovies")
+        res.sendStatus(500)
+    }
+
+}
+
 export async function updateReviewById(req: Request, res: Response){
 
     const { id } = req.params
-    const comentary = req.body as Comentary
+    const setComentary = req.body as NewReview
 
     const idNumber = Number(id)
 
-    const verifica = await verificaId(idNumber)
-
-    if(verifica !== "Ok"){
-        res.status(404).send(verifica)
-        return
-    }
-
-
     try {
-        await updateReview(idNumber, comentary.comentary)
+        const retorno = await updateReview(idNumber, setComentary)
+        if(retorno === null || retorno === undefined){
+            console.log("Houve um erro ao fazer o update do comentário");
+            res.sendStatus(400)
+        }
         res.sendStatus(200)
+        return
     } catch (error) {
         console.log(error, "erro no try catch de updateReviewById")
+        res.sendStatus(500)
+        return
     }
 
 }
@@ -72,16 +110,13 @@ export async function deleteReviewById(req: Request, res: Response){
 
     const idNumber = Number(id)
 
-    const verifica = await verificaId(idNumber)
-
-    if(verifica !== "Ok"){
-        res.status(404).send(verifica)
-        return
-    }
-
     try {
         
-        await deleteReview(idNumber)
+        const retorno = await deleteReview(idNumber)
+        if(retorno === null || retorno === undefined){
+            console.log("Houve um erro ao fazer o delete do review");
+            res.sendStatus(400)
+        }
         res.sendStatus(200)
 
     } catch (error) {
@@ -90,3 +125,41 @@ export async function deleteReviewById(req: Request, res: Response){
     }
 
 }
+
+export async function getGenres(req: Request, res: Response){
+
+    try {
+        const retorno = await retrieveGenres()
+        if(retorno === null || retorno === undefined){
+            console.log("Houve um erro ao buscar os gêneros no banco");
+            res.sendStatus(400)
+        }
+        res.status(200).send(retorno)
+        return
+    } catch (error) {
+        console.log(error, "erro no try/catch de getGenres")
+        res.sendStatus(500);
+        return
+    }
+
+}
+
+export async function getParentalRatings(req: Request, res: Response){
+
+    try {
+        const retorno = await retrieveParentalRatings()
+        if(retorno === null || retorno === undefined){
+            console.log("Houve um erro ao buscar as classificações indicativas no banco");
+            res.sendStatus(400)
+        }
+        res.status(200).send(retorno)
+        return
+    } catch (error) {
+        console.log(error, "erro no try/catch de getParentalRatings")
+        res.sendStatus(500);
+        return
+    }
+
+}
+
+
