@@ -1,5 +1,6 @@
 import prisma from "../src/database/db.js";
 
+
 async function main() {
 
     await prisma.parentalratings.createMany({

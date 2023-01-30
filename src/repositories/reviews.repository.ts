@@ -1,4 +1,4 @@
-import { QueryResult } from "pg";
+
 import prisma from "../database/db.js";
 import { Review, ReviewEntity, NewReview } from "../protocols/review.protocol.js";
 import { verificaMovieId } from "../services/id.verification.service.js";
@@ -30,7 +30,8 @@ export async function retrieveReviews(){
             include: {
                 movie: {
                     select: {
-                        title: true
+                        title: true,
+                        release_date: true
                     }
                 }
             }
@@ -40,55 +41,6 @@ export async function retrieveReviews(){
         console.log(error, "erro no try/catch de getReviews");
         return error
     } 
-}
-
-export async function updateMovie(movie_id: number){
-
-
-    try {
-        
-        const update = await prisma.movies.update({
-            where: {
-                id: movie_id
-            },
-            data:{
-                has_review: true
-            }
-        })
-
-        return update
-
-    } catch (error) {
-        
-    }
-
-}
-
-export async function retrieveMovies(){
-
-    try {
-        
-        const get = await prisma.movies.findMany({
-            include: {
-                genre: {
-                    select: {
-                        genre: true
-                    }
-                },
-                parental_rating: {
-                    select: {
-                        parental_rating: true
-                    }
-                }
-            }
-        })
-        return get
-
-    } catch (error) {
-        console.log(error, "erro no try/catch de retrieveMovies")
-        return error
-    }
-
 }
 
 export async function updateReview(idNumber: number, setComentary: NewReview){
@@ -127,27 +79,3 @@ export async function deleteReview(idNumber: number){
 
 }
 
-export async function retrieveGenres(){
-
-    try {
-        const get = await prisma.genres.findMany()
-        return get
-    } catch (error) {
-        console.log(error, "erro no try/catch de retrieveGenres")
-        return error
-    }
-
-}
-
-export async function retrieveParentalRatings(){
-
-    try {
-        const get = await prisma.parentalratings.findMany()
-        
-        return get
-    } catch (error) {
-        console.log(error, "erro no try/catch de retrieveGenres")
-        return error
-    }
-
-}

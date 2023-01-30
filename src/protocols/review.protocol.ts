@@ -4,26 +4,40 @@ export type ReviewEntity = {
     comentary: string,
     rate: number,
     created_at: string,
-    movie: {title: string}
+    movie: MovieEntity
 }
-
 
 export type MovieEntity = {
     id: number,             
     title: string,              
     release_date: string,    
     genre_id: number,           
-    parental_rating_id: number         
+    parental_rating_id: number,
+    genre: Genre,
+    parental_rating: ParentalRating
 }
 
-export type GenreEntity ={
+export type MovieReview = {
+    title: string,
+    release_date: string
+}
+
+export type Genre ={
+    genre: string
+}
+
+export type ParentalRating = {
+    parental_rating: string
+}
+
+export type GenreEntity = {
     id: number,
     genre: string
 }
 
-export type ParentalRatingEntity = {
+export type ParentalRatingEntity= {
     id: number,
-    genre: string
+    parental_rating: string
 }
 
 export type Movie = Omit<ReviewEntity, "id">

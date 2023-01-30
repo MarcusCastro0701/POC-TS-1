@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {  getMovies, getGenres, getParentalRatings } from "../controllers/reviews.controller.js";
+import {  getMovies, getGenres, getParentalRatings } from "../controllers/movies.controller.js";
 
 
 const router = Router()
