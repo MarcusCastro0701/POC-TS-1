@@ -1,7 +1,7 @@
 
-import prisma from "../database/db.js";
-import { Review, ReviewEntity, NewReview } from "../protocols/review.protocol.js";
-import { verificaMovieId } from "../services/id.verification.service.js";
+import prisma from "../database/db";
+import { Review, ReviewEntity, NewReview } from "../protocols/review.protocol";
+import { verificaMovieId } from "../services/id.verification.service";
 
 export async function insertReview(review: Review, movie_id: number){
 

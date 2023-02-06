@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { insertReview, retrieveReviews, updateReview, deleteReview } from "../repositories/reviews.repository.js";
-import { updateMovie } from "../repositories/movies.repository.js";
-import { Review, Comentary, NewReview } from "../protocols/review.protocol.js";
-import { reviewSchema } from "../schemas/review.schemas.js";
-import { verificaMovieId } from "../services/id.verification.service.js";
+import { insertReview, retrieveReviews, updateReview, deleteReview } from "../repositories/reviews.repository";
+import { updateMovie } from "../repositories/movies.repository";
+import { Review, Comentary, NewReview } from "../protocols/review.protocol";
+import { reviewSchema } from "../schemas/review.schemas";
+
 
 
 export async function postReview(req: Request, res: Response){

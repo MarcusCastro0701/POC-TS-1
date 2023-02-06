@@ -1,14 +1,13 @@
 {
     "compilerOptions": {
-        "outDir": "dist",
-        "esModuleInterop": true,
-        "module": "es6",
-        "moduleResolution": "Node"
+      "outDir": "dist",
+      "esModuleInterop": true,
+      "module": "CommonJS",
+      "moduleResolution": "Node"
     },
-    
     "ts-node": {
-        "esm": true
-    }
-}
+      "esm": true
+    },
+  }
 
 //npx nodemon src/app.ts ==> rodar o servidor

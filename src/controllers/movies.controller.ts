@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { retrieveMovies, retrieveGenres, retrieveParentalRatings } from "../repositories/movies.repository.js";
+import { retrieveMovies, retrieveGenres, retrieveParentalRatings } from "../repositories/movies.repository";
 import { Review, Comentary, NewReview } from "../protocols/review.protocol.js";
 import { reviewSchema } from "../schemas/review.schemas.js";
 
@@ -14,7 +14,7 @@ export async function getMovies(req: Request, res: Response){
             res.sendStatus(400);
             return
         }
-        console.log(retorno)
+        
         res.status(200).send(retorno)
     } catch (error) {
         console.log(error, "houve um erro no try/catch de getMovies")

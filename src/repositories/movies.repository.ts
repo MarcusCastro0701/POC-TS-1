@@ -1,5 +1,5 @@
-import prisma from "../database/db.js";
-import { MovieEntity, GenreEntity, ParentalRatingEntity } from "../protocols/review.protocol.js";
+import prisma from "../database/db";
+import { MovieEntity, GenreEntity, ParentalRatingEntity } from "../protocols/review.protocol";
 import { movies } from "@prisma/client"
 import { verificaMovieId } from "../services/id.verification.service.js";
 import { QueryResult } from "pg";
